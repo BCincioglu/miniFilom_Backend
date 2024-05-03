@@ -14,9 +14,9 @@ app.use(function (req, res, next) {
 });
 
 
-const rentalRouter = require("../miniFilom 2/route/rental.js");
-const renterRouter = require("../miniFilom 2/route/renter.js");
-const vehicleRouter = require("../miniFilom 2/route/vehicle.js");
+const rentalRouter = require("../miniFilom_Backend/route/rental.js");
+const renterRouter = require("../miniFilom_Backend/route/renter.js");
+const vehicleRouter = require("../miniFilom_Backend/route/vehicle.js");
 const { deneme } = require("./Middleware/ScheduledThings.js");
 
 app.use(express.json());
