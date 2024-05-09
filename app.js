@@ -17,12 +17,14 @@ app.use(function (req, res, next) {
 const rentalRouter = require("../miniFilom_Backend/route/rental.js");
 const renterRouter = require("../miniFilom_Backend/route/renter.js");
 const vehicleRouter = require("../miniFilom_Backend/route/vehicle.js");
-const { deneme } = require("./Middleware/ScheduledThings.js");
+const authRouter = require("../miniFilom_Backend/route/auth.js");
+require("./Middleware/ScheduledThings.js");
 
 app.use(express.json());
 app.use('/vehicle', vehicleRouter);
 app.use('/renter', renterRouter);
 app.use('/rental', rentalRouter);
+app.use('/auth', authRouter);
  
 
 const PORT = process.env.PORT || 3000; 
