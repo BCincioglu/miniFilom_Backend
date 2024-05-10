@@ -1,17 +1,18 @@
 const express = require("express");
 
 const renterController = require("../controller/renter.js");
+const { isAuth } = require("../Middleware/authMiddleware.js");
 
 const router = express.Router();
 
-router.get("/", renterController.getAllRenters);
+router.get("/", isAuth, renterController.getAllRenters);
 
-router.get("/:id", renterController.getRenterById);
+router.get("/:id", isAuth, renterController.getRenterById);
 
-router.post("/",renterController.postRenter);
+router.post("/", isAuth, renterController.postRenter);
 
-router.post("/:id", renterController.postUpdateRenter);
+router.post("/:id", isAuth, renterController.postUpdateRenter);
 
-router.delete("/:id", renterController.postDeleteRenter);
+router.delete("/:id", isAuth, renterController.postDeleteRenter);
 
 module.exports = router;

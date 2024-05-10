@@ -1,17 +1,18 @@
 const express = require("express");
 
 const vehicleController = require("../controller/vehicle.js");
+const { isAuth } = require("../Middleware/authMiddleware.js");
 
 const router = express.Router();
 
-router.get("/", vehicleController.getAllVehicles);
+router.get("/", isAuth, vehicleController.getAllVehicles);
 
-router.get("/:id", vehicleController.getVehicleById);
+router.get("/:id", isAuth, vehicleController.getVehicleById);
 
-router.post("/",vehicleController.postNewVehicle);
+router.post("/", isAuth, vehicleController.postNewVehicle);
 
-router.post("/:id", vehicleController.postEditVehicle);
+router.post("/:id", isAuth, vehicleController.postEditVehicle);
 
-router.delete("/:id", vehicleController.postDeleteVehicle);
+router.delete("/:id", isAuth, vehicleController.postDeleteVehicle);
 
 module.exports = router;
