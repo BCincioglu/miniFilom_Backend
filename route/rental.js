@@ -7,6 +7,8 @@ const router = express.Router();
 
 router.get("/", isAuth, rentalController.getAllRentals);
 
+router.get("/aggre", isAuth, rentalController.aggregateRentals);
+
 router.get("/:id", isAuth, rentalController.getRentalById);
 
 router.post("/", isAuth, rentalController.postRental);

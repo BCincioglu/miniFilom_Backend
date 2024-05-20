@@ -17,15 +17,26 @@ exports.postRental = async (req, res) => {
   }
 };
 
-
 exports.getAllRentals = async (req, res) => {
   try {
-    const rentals = await Rental.find();
-    res.status(200).json(rentals);
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+
+    const totalRentals = await Rental.countDocuments();
+
+    const startIndex = (page - 1) * limit;
+
+    const rentals = await Rental.find().limit(limit).skip(startIndex);
+
+    res.status(200).json({
+      rentals,
+      totalPages: Math.ceil(totalRentals / limit)
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
+
 
 exports.getRentalById = async (req, res) => {
   try {
@@ -63,3 +74,54 @@ exports.deleteRental = async (req, res) => {
   }
 };
 
+exports.aggregateRentals = async (req, res) => {
+  try {
+    const pipeline =[
+        {
+          $lookup: {
+            from: "vehicles",
+            localField: "vehicle",
+            foreignField: "_id",
+            as: "vehicleDetails"
+          }
+        },
+        {
+          $unwind: "$vehicleDetails"
+        },
+        {
+          $lookup: {
+            from: "renters",
+            localField: "renter",
+            foreignField: "_id",
+            as: "renterDetails"
+          }
+        },
+        {
+          $unwind: "$renterDetails"
+        },
+        {
+          $project: {
+            _id: 1,
+            plateNumber: "$vehicleDetails.plateNumber",
+            brand: "$vehicleDetails.brand",
+            model: "$vehicleDetails.model",
+            productionYear:
+              "$vehicleDetails.productionYear",
+            color: "$vehicleDetails.color",
+            type: "$vehicleDetails.type",
+            status: "$vehicleDetails.status",
+            price: "$vehicleDetails.price",
+            renter: "$renterDetails.name",
+            renterContact: "$renterDetails.contact",
+            renterType: "$renterDetails.type",
+            startDate: 1,
+            endDate: 1,
+            createdAt: 1
+          }
+    }]; 
+    const result = await Rental.aggregate(pipeline);
+    res.json(result);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+};
